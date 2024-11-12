@@ -11,6 +11,7 @@ public class Client {
 	private int porta;//porta su cui il server � in listen
 	private ObjectInputStream in;//oggetto per leggere dati dal socket
 	private ObjectOutputStream out;//oggetto per scrivere dati sul socket
+	private Messaggio messaggio;
 	
 	public Client(String ip, int porta) {
 		super();
@@ -89,4 +90,20 @@ public class Client {
             chiudiSocket();
         }
     }
+
+	void mailFrom(String s){
+		messaggio.setFrom(s);
+	}
+
+	void mailTo(String s){
+		messaggio.setTo(s);
+	}
+
+	void mailHeader(String s){
+		messaggio.setHeader(s);
+	}
+
+	void mailBody(String s){
+		messaggio.setBody(s);
+	}
 }
