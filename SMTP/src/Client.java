@@ -12,6 +12,7 @@ public class Client {
 	private ObjectInputStream in;//oggetto per leggere dati dal socket
 	private ObjectOutputStream out;//oggetto per scrivere dati sul socket
 	private Messaggio messaggio;
+	private boolean con = false;
 	
 	public Client(String ip, int porta) {
 		super();
@@ -22,10 +23,19 @@ public class Client {
 		out=null;
 		
 		connetti();
-		
+
+		messaggio = new Messaggio(null,null,null,null);
 		
 	}
-	
+
+	public boolean isConnected(){
+		return con;
+	}
+
+	public void setCon(boolean con) {
+		this.con = con;
+	}
+
 	private void connetti() {
 		try {
 			//connetti il client al server
@@ -39,7 +49,9 @@ public class Client {
 			if(rispostaServer.indexOf("HELO client")!=0) {
 				System.out.println("Il server non ha inviato il messaggio \"HELO client...\"");
 				chiudiSocket();
-			}		
+			}else{
+				con = true;
+			}
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -65,7 +77,11 @@ public class Client {
 			System.exit(1);
 		}
 	}
-	
+
+	public Messaggio getMessaggio() {
+		return messaggio;
+	}
+
 	public void comunica() {
         Scanner scanner = new Scanner(System.in);
         String messaggio;
