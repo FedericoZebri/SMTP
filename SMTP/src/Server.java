@@ -40,7 +40,7 @@ public class Server{
 				clientSocket = server.accept();
 				numCon++;
 				System.out.println("Numero di connessioni: "+numCon);
-				ThreadGestioneClient t = new ThreadGestioneClient (clientSocket);
+				ThreadGestioneClient t = new ThreadGestioneClient (clientSocket, listaMessaggi);
                 t.start();//avvia il Thread
                 
                 
@@ -67,5 +67,11 @@ public class Server{
 		}
 	}
 
-	
+	public void aggiungiMessaggio(Messaggio m) {
+		listaMessaggi.add(m);
+	}
+
+	public ArrayList<Messaggio> getListaMessaggi() {
+		return listaMessaggi;
+	}
 }

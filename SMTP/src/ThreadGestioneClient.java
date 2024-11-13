@@ -3,18 +3,20 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class ThreadGestioneClient extends Thread{
 	private  Socket clientSocket;//socket connesso al client
 	private ObjectInputStream in;//per leggere i dati dal socket
 	private ObjectOutputStream out;//per scrivere dati sul socket
 	private boolean connesso;
+	private ArrayList<Messaggio> listaMessaggi;
 
-	public ThreadGestioneClient(Socket clientSocket) {
+	public ThreadGestioneClient(Socket clientSocket, ArrayList<Messaggio> listaMessaggi) {
 		super();
 		connesso=false;
 		this.clientSocket = clientSocket;
-		
+		this.listaMessaggi = listaMessaggi;
 		
 		try {
 			out=new ObjectOutputStream(clientSocket.getOutputStream());
@@ -65,15 +67,9 @@ public class ThreadGestioneClient extends Thread{
         try {
             boolean fine = false;
             while (!fine) {
-                String messaggio = (String) in.readObject();
+                Messaggio messaggio = (Messaggio) in.readObject();
                 System.out.println("Oggetto ricevuto dal client: " + messaggio);
-
-                if (messaggio.equalsIgnoreCase("FINE")) {
-                    fine = true;
-                    out.writeObject("OK: Connessione Terminata");
-                } else {
-                    out.writeObject("OK");
-                }
+				aggiungiMessaggio(messaggio);
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -91,6 +87,12 @@ public class ThreadGestioneClient extends Thread{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println("Problemi nella chiusura del socket");
+		}
+	}
+
+	private void aggiungiMessaggio(Messaggio m) {
+		synchronized (listaMessaggi) {  // Sincronizzazione per evitare problemi di concorrenza
+			listaMessaggi.add(m);
 		}
 	}
 	

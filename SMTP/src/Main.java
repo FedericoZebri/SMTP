@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -7,14 +8,7 @@ public class Main {
 
         //Client mittente e server a cui si collega
         Client clientMittente = new Client("172.16.254.1",25);
-        Server server1 = new Server(25);
-
-        //Client destinatari e server a cui si collegano
-        Server server2 = new Server(25);
-        Client clientDestinatarioUno = new Client("192.158.1.1",25);
-        Client clientDestinatarioDue = new Client("192.158.1.2",25);
-
-
+        Server server = new Server(25);
 
 
         Scanner scanner = new Scanner(System.in);
@@ -68,11 +62,10 @@ public class Main {
                     break;
 
                 case "LIST":
-                    inviaComando("LIST");
+                    stampaListaMessaggi(server.getListaMessaggi());
                     break;
 
                 case "QUIT":
-                    inviaComando("QUIT");
                     clientMittente.setCon(false); // Termina il loop
                     break;
 
@@ -82,7 +75,6 @@ public class Main {
                     break;
             }
         }
-        chiudiSocket();
         scanner.close();
 
     }
@@ -96,6 +88,11 @@ public class Main {
         System.out.println("DATA: indica l'inizio del messaggio di posta");
         System.out.println("LIST: il server mostra la lista di mail salvate");
         System.out.println("QUIT: termina la connessione tra client e server");
+    }
+    static void stampaListaMessaggi(ArrayList<Messaggio> listaMessaggi){
+        for(Messaggio messaggio : listaMessaggi){
+            System.out.println(messaggio);
+        }
     }
 
 }
